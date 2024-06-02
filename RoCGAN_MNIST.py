@@ -1,3 +1,4 @@
+#import necessary librairies
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -157,7 +158,7 @@ optimizer_G = optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 optimizer_D = optim.Adam(discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
 # Device configuration
-device = "mps"#torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 encoder.to(device)
 decoder.to(device)
 generator.to(device)

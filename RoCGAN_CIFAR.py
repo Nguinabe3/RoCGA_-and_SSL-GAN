@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
+#import necessary librairies
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -11,10 +9,6 @@ import torchvision
 import torchvision.transforms as transforms
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-# In[2]:
-
 
 # Define transformations for the training set
 transform = transforms.Compose([
@@ -29,10 +23,7 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True,
 # Define the number of classes
 num_classes = 10
 
-
-# In[3]:
-
-
+#define the encoder class
 class Encoder(nn.Module):
     def __init__(self, latent_dim, img_shape):
         super(Encoder, self).__init__()
@@ -58,6 +49,7 @@ class Encoder(nn.Module):
         z = self.model(img)
         return z
 
+#define the decoder class
 class Decoder(nn.Module):
     def __init__(self, latent_dim, img_shape):
         super(Decoder, self).__init__()
@@ -86,9 +78,7 @@ class Decoder(nn.Module):
         return img
 
 
-# In[4]:
-
-
+#Define the generator class
 class Generator(nn.Module):
     def __init__(self, latent_dim, num_classes, img_shape):
         super(Generator, self).__init__()
@@ -118,6 +108,7 @@ class Generator(nn.Module):
         img = self.conv_blocks(out)
         return img
 
+#Define the Discriminator class
 class Discriminator(nn.Module):
     def __init__(self, num_classes, img_shape):
         super(Discriminator, self).__init__()
@@ -140,10 +131,6 @@ class Discriminator(nn.Module):
         d_in = torch.cat((img.view(img.size(0), -1), self.label_embedding(labels)), -1)
         validity = self.model(d_in)
         return validity
-
-
-# In[5]:
-
 
 # Model parameters
 latent_dim = 100
@@ -169,10 +156,6 @@ decoder.apply(weights_init_normal)
 generator.apply(weights_init_normal)
 discriminator.apply(weights_init_normal)
 
-
-# In[7]:
-
-
 # Loss functions
 adversarial_loss = nn.MSELoss()
 reconstruction_loss = nn.L1Loss()
@@ -184,17 +167,13 @@ optimizer_G = optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 optimizer_D = optim.Adam(discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
 # Device configuration
-device = "mps"#torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 encoder.to(device)
 decoder.to(device)
 generator.to(device)
 discriminator.to(device)
 adversarial_loss.to(device)
 reconstruction_loss.to(device)
-
-
-# In[8]:
-
 
 # Training parameters
 n_epochs = 200
@@ -264,9 +243,6 @@ for epoch in range(n_epochs):
             print(f"[Epoch {epoch}/{n_epochs}] [Batch {i}/{len(trainloader)}] [D loss: {d_loss.item()}] [G loss: {g_loss.item()}]")
 
 
-# In[9]:
-
-
 # Function to generate and save images
 def sample_image(n_row, epoch):
     """Saves a grid of generated digits ranging from 0 to n_classes"""
@@ -286,13 +262,7 @@ def sample_image(n_row, epoch):
     plt.show()
 
 
-# In[10]:
-
-
 sample_image(n_row=10, epoch=n_epochs)
-
-
-# In[ ]:
 
 
 
