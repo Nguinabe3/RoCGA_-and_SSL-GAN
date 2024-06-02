@@ -158,9 +158,9 @@ optimizer_G = optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 optimizer_D = optim.Adam(discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
 # Device configuration
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-encoder.to(device)
-decoder.to(device)
+device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+encoder = encoder.to(device)
+decoder = decoder.to(device)
 generator.to(device)
 discriminator.to(device)
 adversarial_loss.to(device)
